@@ -56,7 +56,9 @@ while True:
             thresh = cv.threshold(gray, 200, 255, cv.THRESH_BINARY)[1]
             img_a = cv.inpaint(img,thresh,3,cv.INPAINT_TELEA)
             
-            # red B G R
+            # color bounds
+            # red (B G R)
+            # Co upper_bound va lower_bound de loc mau do tuy theo do sang va goc chieu sang
             lower_bound = np.array([30,10,150],dtype = "uint8")   
             upper_bound = np.array([130,110,255],dtype = "uint8")
             mask_r= cv.inRange(img_a, lower_bound, upper_bound)
@@ -72,7 +74,7 @@ while True:
             mask_o= cv.inRange(img_a, lower_bound, upper_bound)
             check_o=np.where(mask_o!=0)
         
-            # Check kind signs
+            # Check color type
             if np.size(np.where(mask_v!=0)) > 30000 :
                 mask = mask_v                    
                 list_color.append(1)
@@ -104,9 +106,9 @@ while True:
                       
                 if max_area != 0: 
                     max_area = 0                   
-                    rect = cv.minAreaRect(contour)
-                    box = cv.boxPoints(rect)
-                    box = np.int0(box)
+                    rect = cv.minAreaRect(contour)  # (x1, y1) (x2, y2) angle
+                    box = cv.boxPoints(rect)  # Tu 3 gia tri o tren, ham nay se tinh ra 4 dinh cua hinh chu nhat
+                    box = np.int0(box)  # int0 is int64
                     cv.drawContours(img_a,[box],0,(0,0,255),2)
                     angle = int(rect[2])
                     print('1.',angle)
